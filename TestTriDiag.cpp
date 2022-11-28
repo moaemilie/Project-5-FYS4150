@@ -11,11 +11,10 @@ int main(){
     //arma::cx_double r = arma::cx_double(0.0, 1.0);
     
     //std::complex<double>r i(0.0,1.0);
-    arma::vec vector = arma::vec("0.0 1. 2. 3. 4. 5. 6. 7. 8.");
+    arma::cx_vec vector = arma::cx_vec("0.0 1. 2. 3. 4. 5. 6. 7. 8.");
     //arma::vec vector = arma::vec("0.1 0.2 0.3 0.4 0.8 1. 5.");
-
-    Shrodinger model = Shrodinger(1., 1., 1.);
-
+    arma::mat V = arma::mat(3, 3).fill(1.);
+    Shrodinger model = Shrodinger(0.2, 0.1, V, 1., 1., 1., 1., 1., 1.);
     arma::cx_mat A = model.tri_matrix(vector, -model.r);
 
     assert(A(0,0)==arma::cx_double(0.0, 0.0));
@@ -49,12 +48,21 @@ int main(){
     assert(A(4,0)==arma::cx_double(0.0, 0.0));
     assert(A(0,4)==arma::cx_double(0.0, 0.0));
 
-    arma::mat V = arma::mat(3, 3).fill(1.);
-    model.CalcAB(5., 0.1, 0.1, V);
+    //arma::cx_vec a = model.CalcAB(true);
+    //arma::cx_vec b = model.CalcAB(false);
+
+    //model.CalcAB(true);
+    
     std::cout<<"\n\n a_k:";
     std::cout<< model.a_k;
     std::cout<<"\n\n b_k:";
     std::cout<< model.b_k;  
+    std::cout<<"\n\n A:";
+    std::cout<< model.A;  
+    std::cout<<"\n\n B:";
+    std::cout<< model.B;  
+
+
  
 
     return 0;
