@@ -6,15 +6,11 @@
 
 
 Shrodinger::Shrodinger(double h_in, double deltat_in, double x_c_in, double y_c_in, double sig_x_in, double sig_y_in, double p_y_in, double p_x_in, double v_0_in, double slit_width_in, double part_width_in, double wall_width_in, double x_pos_in){
+    
     r = arma::cx_double(0.0, 1.0*deltat_in/(2*h_in*h_in));
     h = h_in;
     M = 1/h_in;
     deltat = deltat_in;
-    V = init_V();
-    a_k = CalcAB(true);
-    b_k = CalcAB(false);
-    B = tri_matrix(b_k, r);
-    A = tri_matrix(a_k, -r);
     x_c = x_c_in;
     y_c = y_c_in;
     sig_x = sig_x_in;
@@ -26,6 +22,11 @@ Shrodinger::Shrodinger(double h_in, double deltat_in, double x_c_in, double y_c_
     slit_width = slit_width_in;
     part_width =  part_width_in;
     wall_width = wall_width_in;
+    V = init_V();
+    a_k = CalcAB(true);
+    b_k = CalcAB(false);
+    A = tri_matrix(a_k, -r);
+    B = tri_matrix(b_k, r);
     u = init_u();
 
 
@@ -36,7 +37,7 @@ double Shrodinger::getK(double i, double j, double N) {
     return k;
 }
 
-
+// This function creates the initial trid idagnoal matri
 arma::cx_mat Shrodinger::tri_matrix(arma::cx_vec vector, arma::cx_double r){
 
     double N = vector.size();
@@ -49,7 +50,7 @@ arma::cx_mat Shrodinger::tri_matrix(arma::cx_vec vector, arma::cx_double r){
         A(N-1, N-1)=vector(N-1);
 
         for(int i=0; i < N-1; i++){
-            for(int j=0;j<N-1; j++){
+            for(int j=0;j < N-1; j++){
 
                  if(i==j){
                     A(i,j)=vector(i);
@@ -76,15 +77,11 @@ arma::cx_mat Shrodinger::tri_matrix(arma::cx_vec vector, arma::cx_double r){
     return A;
 }
 
-//arma::cx_vec Shrodinger::CalcAB(double M, double h, double deltat, arma::mat V, bool aorb){
+//This function creates the ak and bk vectors
 arma::cx_vec Shrodinger::CalcAB(bool aorb){
     double k_len = (M-2)*(M-2);
     a_k = arma::cx_vec(k_len).fill(0.);
     b_k = arma::cx_vec(k_len).fill(0.);
-    double n = V.size();
-    //std::cout<< n;
-
-    arma::cx_double i = arma::cx_double(0.0, 1.0);
 
     for(int i=0; i < M-2; i++){
             for(int j=0; j < M-2; j++){
@@ -104,13 +101,7 @@ arma::cx_vec Shrodinger::CalcAB(bool aorb){
 
 }
 
-void Shrodinger::find_u_next(){
-
-    arma::cx_vec b = B*u;
-    u = solve(A, b);
-
-}
-
+// This function creates the initial u
 arma::cx_vec Shrodinger::init_u(){
 
     double k_len = (M-2)*(M-2);
@@ -129,22 +120,35 @@ arma::cx_vec Shrodinger::init_u(){
     return u_0;
 }
 
+// This function creates the inital V matrix
 arma::mat Shrodinger::init_V(){
     V = arma::mat(M-2, M-2).fill(0.);
     double walls_y = (1-slit_width*2+part_width)/(2);
-    double walls_x = x_pos-(wall_width/(2.*h));
-
+    double walls_x = (x_pos/h)-(wall_width/(2.*h));
 
     for(double i = walls_x; i <=walls_x+(wall_width/h); i++){
 
-        for(double j = 1; j < M/h; j++){
+         for(double j = 0; j < M-2; j++){
 
             if(j<= 85 || (95 < j && j < 105) || j > 115){
 
                 V(i, j) = v_0;
             }
-        }
-    }
+        } 
+    }  
 return V;
     
+}
+
+// This function finds the u for the next timestep
+void Shrodinger::find_u_next(){
+
+    arma::cx_vec b = B*u;
+    u = solve(A, b);
+}
+
+// This function calcualtes the p for u 
+arma::cx_double Shrodinger::find_p(arma::cx_vec u){
+    return sum(conj(u)%u);
+
 }

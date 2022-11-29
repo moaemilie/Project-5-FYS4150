@@ -43,11 +43,14 @@ class Shrodinger{
         //arma::cx_vec CalcAB(double M, double h, double deltat, arma::mat V, bool aorb);
         arma::cx_vec CalcAB(bool aorb);
 
-        void find_u_next();
-
         arma::cx_vec init_u();
 
         arma::mat init_V();
+
+        void find_u_next();
+
+        arma::cx_double find_p(arma::cx_vec u);
+        
 
 };
 
