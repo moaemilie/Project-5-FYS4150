@@ -143,12 +143,18 @@ return V;
 // This function finds the u for the next timestep
 void Shrodinger::find_u_next(){
 
-    arma::cx_vec b = B*u;
-    u = solve(A, b);
+    //arma::cx_vec b = B*u;
+    u = solve(A, B*u);
 }
 
 // This function calcualtes the p for u 
-arma::cx_double Shrodinger::find_p(arma::cx_vec u){
-    return sum(conj(u)%u);
+arma::cx_double Shrodinger::find_p_val(arma::cx_vec u){
+    return sum(conj(u)%u); //-1;
+
+}
+
+// This function calcualtes the p for u 
+arma::cx_vec Shrodinger::find_p_vec(arma::cx_vec u){
+    return conj(u)%u; 
 
 }

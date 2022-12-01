@@ -49,7 +49,9 @@ class Shrodinger{
 
         void find_u_next();
 
-        arma::cx_double find_p(arma::cx_vec u);
+        arma::cx_double find_p_val(arma::cx_vec u);
+
+        arma::cx_vec find_p_vec(arma::cx_vec u);
         
 
 };
