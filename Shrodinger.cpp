@@ -39,8 +39,8 @@ double Shrodinger::getK(double i, double j, double N) {
 
 // This function creates the initial trid idagnoal matri
 arma::cx_mat Shrodinger::tri_matrix(arma::cx_vec vector, arma::cx_double r){
-
-    double N = vector.size();
+    double N = (M-2)*(M-2);
+    //double N = vector.size();
     arma::cx_mat A = arma::cx_mat(N,N).fill(0.);
 
         //Create tridiagonal matrix
@@ -143,13 +143,14 @@ return V;
 // This function finds the u for the next timestep
 void Shrodinger::find_u_next(){
 
-    //arma::cx_vec b = B*u;
-    u = solve(A, B*u);
+    arma::cx_vec b = B*u;
+    //u = spsolve(A, b); 
+    u = solve(A, b); 
 }
 
 // This function calcualtes the p for u 
 arma::cx_double Shrodinger::find_p_val(arma::cx_vec u){
-    return sum(conj(u)%u); //-1;
+    return sum(conj(u)%u); 
 
 }
 
