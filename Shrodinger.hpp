@@ -15,8 +15,9 @@ class Shrodinger{
         arma::cx_vec a_k;
         arma::cx_vec b_k;
         arma::mat V;
-        arma::cx_mat B;
-        arma::cx_mat A;
+        arma::sp_cx_mat B;
+        arma::sp_cx_mat A;
+        //arma::cx_mat A;
         arma::cx_vec u;
         double x_c;
         double y_c;

@@ -6,10 +6,10 @@
 
 
 Shrodinger::Shrodinger(double h_in, double deltat_in, double x_c_in, double y_c_in, double sig_x_in, double sig_y_in, double p_y_in, double p_x_in, double v_0_in, double slit_width_in, double part_width_in, double wall_width_in, double x_pos_in){
-    
+    std::cout<< "Im in the model" <<std::endl;
     r = arma::cx_double(0.0, 1.0*deltat_in/(2*h_in*h_in));
     h = h_in;
-    M = 1/h_in;
+    M = 1./(h_in)+1.;
     deltat = deltat_in;
     x_c = x_c_in;
     y_c = y_c_in;
@@ -22,12 +22,16 @@ Shrodinger::Shrodinger(double h_in, double deltat_in, double x_c_in, double y_c_
     slit_width = slit_width_in;
     part_width =  part_width_in;
     wall_width = wall_width_in;
+    std::cout<< "Im done with initializing values"<<std::endl;
     V = init_V();
+    std::cout<< "Im done with V"<<std::endl;
     a_k = CalcAB(true);
     b_k = CalcAB(false);
     A = tri_matrix(a_k, -r);
     B = tri_matrix(b_k, r);
+    std::cout<< "Im done with A and B"<<std::endl;
     u = init_u();
+    std::cout<< "Im done u"<<std::endl;
 
 
 }
@@ -59,9 +63,9 @@ arma::cx_mat Shrodinger::tri_matrix(arma::cx_vec vector, arma::cx_double r){
                     A(i,j+1) = r; 
 
 
-                    if(j+3<N){
-                        A(i+3,j) = r;
-                        A(i,j+3) = r;
+                    if(j+(M-2)<N){
+                        A(i+(M-2),j) = r;
+                        A(i,j+(M-2)) = r;
                     }
 
                     if((j+1)%3 == 0 && j!=N){
@@ -112,7 +116,7 @@ arma::cx_vec Shrodinger::init_u(){
                 double k = getK(i, j, M-2);
                 double x = i*1/(M-2);
                 double y = j*1/(M-2);
-                u_0(k) =  exp(-pow(x-x_c, 2)/(2*pow(sig_x, 2))-pow(y-y_c, 2)/(2*pow(sig_y, 2))+arma::cx_double(0.0, 1.0)*p_x*(x-x_c)+arma::cx_double(0.0, 1.0)*p_y*(y-y_c));
+                u_0(k) =  exp(-pow(x-x_c, 2)/(2*pow(sig_x, 2)) - pow(y-y_c, 2)/(2*pow(sig_y, 2)) + arma::cx_double(0.0, 1.0)*p_x*(x-x_c) + arma::cx_double(0.0, 1.0)*p_y*(y-y_c));
 
             }
         }
@@ -145,7 +149,7 @@ void Shrodinger::find_u_next(){
 
     arma::cx_vec b = B*u;
     //u = spsolve(A, b); 
-    u = solve(A, b); 
+    u = arma::spsolve(A, b); 
 }
 
 // This function calcualtes the p for u 
