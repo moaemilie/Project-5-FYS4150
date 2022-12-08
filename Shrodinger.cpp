@@ -5,8 +5,7 @@
 #include "Shrodinger.hpp"
 
 
-Shrodinger::Shrodinger(double h_in, double deltat_in, double x_c_in, double y_c_in, double sig_x_in, double sig_y_in, double p_y_in, double p_x_in, double v_0_in, double slit_width_in, double part_width_in, double wall_width_in, double x_pos_in){
-    std::cout<< "Im in the model" <<std::endl;
+Shrodinger::Shrodinger(double h_in, double deltat_in, double x_c_in, double y_c_in, double sig_x_in, double sig_y_in, double p_y_in, double p_x_in, double v_0_in, double slit_width_in, double part_width_in, double wall_width_in, double x_pos_in, int slits_in){
     r = arma::cx_double(0.0, 1.0*deltat_in/(2*h_in*h_in));
     h = h_in;
     M = 1./(h_in)+1.;
@@ -22,16 +21,13 @@ Shrodinger::Shrodinger(double h_in, double deltat_in, double x_c_in, double y_c_
     slit_width = slit_width_in;
     part_width =  part_width_in;
     wall_width = wall_width_in;
-    std::cout<< "Im done with initializing values"<<std::endl;
+    slits = slits_in;
     V = init_V();
-    std::cout<< "Im done with V"<<std::endl;
     a_k = CalcAB(true);
     b_k = CalcAB(false);
     A = tri_matrix(a_k, -r);
     B = tri_matrix(b_k, r);
-    std::cout<< "Im done with A and B"<<std::endl;
     u = init_u();
-    std::cout<< "Im done u"<<std::endl;
 
 
 }
@@ -127,19 +123,51 @@ arma::cx_vec Shrodinger::init_u(){
 // This function creates the inital V matrix
 arma::mat Shrodinger::init_V(){
     V = arma::mat(M-2, M-2).fill(0.);
-    double walls_y = (1-slit_width*2+part_width)/(2);
+    double walls_y = (1-slit_width*slits+part_width*(slits-1))/(2);
     double walls_x = (x_pos/h)-(wall_width/(2.*h));
 
-    for(double i = walls_x; i <=walls_x+(wall_width/h); i++){
+    if(slits == 3){
+
+        for(double i = walls_x; i <=walls_x+(wall_width/h); i++){
+
+         for(double j = 0; j < M-2; j++){
+
+            if(j<= 75 || (85 < j && j < 95) || (105 < j && j < 115) || j > 125){
+
+                V(i, j) = v_0;
+                }
+            } 
+        }
+    }  
+
+    if(slits == 2){
+
+        for(double i = walls_x; i <=walls_x+(wall_width/h); i++){
 
          for(double j = 0; j < M-2; j++){
 
             if(j<= 85 || (95 < j && j < 105) || j > 115){
 
                 V(i, j) = v_0;
-            }
-        } 
+                }
+            } 
+        }
     }  
+
+    if(slits == 1){
+
+        for(double i = walls_x; i <=walls_x+(wall_width/h); i++){
+
+         for(double j = 0; j < M-2; j++){
+
+            if( j<= 95 || j > 105){
+
+                V(i, j) = v_0;
+                }
+            } 
+        }
+
+    }
 return V;
     
 }
@@ -148,7 +176,6 @@ return V;
 void Shrodinger::find_u_next(){
 
     arma::cx_vec b = B*u;
-    //u = spsolve(A, b); 
     u = arma::spsolve(A, b); 
 }
 

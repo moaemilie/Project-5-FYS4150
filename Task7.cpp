@@ -16,13 +16,14 @@ int main(){
     double y_c_in = 0.5;
     double sig_y_in = 0.20;
     double p_y_in = 0;
-    double v_0_in = 1*pow(10,10);
+    double v_0_in = 0.;
     double slit_width_in = 0.05;
     double part_width_in = 0.05;
     double wall_width_in = 0.02;
     double x_pos_in = 0.5;
+    int slits_in = 2;
 
-    Shrodinger model = Shrodinger(h_in, deltatt_in, x_c_in, y_c_in, sig_x_in, sig_y_in, p_y_in, p_x_in, v_0_in, slit_width_in, part_width_in, wall_width_in, x_pos_in);
+    Shrodinger model = Shrodinger(h_in, deltatt_in, x_c_in, y_c_in, sig_x_in, sig_y_in, p_y_in, p_x_in, v_0_in, slit_width_in, part_width_in, wall_width_in, x_pos_in, slits_in);
 
     arma::cx_vec result = arma::cx_vec(T_in/deltatt_in+1);
     result(0) = model.find_p_val(model.u);
@@ -40,9 +41,9 @@ int main(){
         std::cout<< " ";
         std::cout<< T_in/deltatt_in; 
 }
-    result.save("Task7_trial1.bin");
+    //result.save("Task7_trial1.bin");
 
-    std::string my_output_file_name =  "model6.csv";
+    std::string my_output_file_name =  "Task7_without.csv";
     result.save(my_output_file_name, arma::csv_ascii);  
 
     return 0;

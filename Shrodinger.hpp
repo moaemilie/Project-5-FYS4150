@@ -12,6 +12,7 @@ class Shrodinger{
         double h;
         double M;
         double deltat;
+        int slits;
         arma::cx_vec a_k;
         arma::cx_vec b_k;
         arma::mat V;
@@ -35,7 +36,7 @@ class Shrodinger{
 
         Shrodinger(){};
         // Constructor
-        Shrodinger(double h, double deltat, double x_c, double y_c, double sig_x, double sig_y, double p_y, double p_x, double v_0, double slit_width, double part_width, double wall_width, double x_pos);
+        Shrodinger(double h, double deltat, double x_c, double y_c, double sig_x, double sig_y, double p_y, double p_x, double v_0, double slit_width, double part_width, double wall_width, double x_pos, int slits_in);
 
         double getK(double i, double j, double N);
 

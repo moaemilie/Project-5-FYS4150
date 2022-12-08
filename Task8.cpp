@@ -23,10 +23,11 @@ int main(){
     double part_width_in = 0.05;
     double wall_width_in = 0.02;
     double x_pos_in = 0.5;
+    int slits_in = 2;
 
     std::cout<< "Im done with defining values" << std::endl;
 
-    Shrodinger model = Shrodinger(h_in, deltatt_in, x_c_in, y_c_in, sig_x_in, sig_y_in, p_y_in, p_x_in, v_0_in, slit_width_in, part_width_in, wall_width_in, x_pos_in);
+    Shrodinger model = Shrodinger(h_in, deltatt_in, x_c_in, y_c_in, sig_x_in, sig_y_in, p_y_in, p_x_in, v_0_in, slit_width_in, part_width_in, wall_width_in, x_pos_in, slits_in);
     
     //std::cout<< model.A;
 
@@ -83,7 +84,7 @@ int main(){
         std::cout<< T_in/deltatt_in; 
     }
 
-    result.save("Task7_trial5.bin");  
+    result.save("Task8.bin");  
    
 
     return 0;
