@@ -25,7 +25,6 @@ int main(){
     double x_pos_in = 0.5;
     int slits_in = 2;
 
-    std::cout<< "Im done with defining values" << std::endl;
 
     Shrodinger model = Shrodinger(h_in, deltatt_in, x_c_in, y_c_in, sig_x_in, sig_y_in, p_y_in, p_x_in, v_0_in, slit_width_in, part_width_in, wall_width_in, x_pos_in, slits_in);
     

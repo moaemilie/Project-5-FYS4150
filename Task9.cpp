@@ -23,9 +23,7 @@ int main(){
     double part_width_in = 0.05;
     double wall_width_in = 0.02;
     double x_pos_in = 0.5;
-    int slits_in = 3;
-
-    std::cout<< "Im done with defining values" << std::endl;
+    int slits_in = 1;
 
     Shrodinger model = Shrodinger(h_in, deltatt_in, x_c_in, y_c_in, sig_x_in, sig_y_in, p_y_in, p_x_in, v_0_in, slit_width_in, part_width_in, wall_width_in, x_pos_in, slits_in);
  
@@ -43,10 +41,11 @@ int main(){
 
         for(double i = 0; i < (model.M-2); i++){
 
-            matrix_p(i, coloumn) = p((model.M-2)*coloumn + i);   
+            matrix_p(i, coloumn) = p((model.M-2)*coloumn + i); 
+
             } 
         }
-    std::cout<< "Done with for loop" << std::endl;
+
     
     arma::cx_mat padded_matrix_p = arma::cx_mat(model.M, model.M).fill(arma::cx_double(0.0, 0.0));
     padded_matrix_p.submat(1 , 1, model.M-2, model.M-2) = matrix_p;
@@ -81,7 +80,7 @@ int main(){
         std::cout<< T_in/deltatt_in; 
     }
 
-    result.save("Task9_3_slit.bin");  
+    result.save("Task9_test.bin");  
    
  
     return 0;

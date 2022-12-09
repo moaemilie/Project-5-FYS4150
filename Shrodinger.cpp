@@ -34,45 +34,52 @@ Shrodinger::Shrodinger(double h_in, double deltat_in, double x_c_in, double y_c_
 
 double Shrodinger::getK(double i, double j, double N) {
     double k = j*N + i;
+    //double k = i*N + j;
     return k;
 }
 
 // This function creates the initial trid idagnoal matri
 arma::cx_mat Shrodinger::tri_matrix(arma::cx_vec vector, arma::cx_double r){
     double N = (M-2)*(M-2);
+    double kmax = (M-2)*(M-2) - 1;
+    double blocksize = (M-2);
     //double N = vector.size();
     arma::cx_mat A = arma::cx_mat(N,N).fill(0.);
 
         //Create tridiagonal matrix
-        A(0,0)=vector(0);
-        A(0,1)=r;
-        A(0,3)=r;
-        A(N-1, N-1)=vector(N-1);
+        //A(0,0)=vector(0);
+        //A(0,1)=r;
+        //A(0,3)=r;
+        //A(N-1, N-1)=vector(N-1);
 
-        for(int i=0; i < N-1; i++){
-            for(int j=0;j < N-1; j++){
+        for(int j=0; j < M-2; j++){
+            for(int i=0; i < M-2; i++){
 
-                 if(i==j){
-                    A(i,j)=vector(i);
+                    int k = getK(i, j, M-2);
 
-                    A(i+1,j) = r;
-                    A(i,j+1) = r; 
+                    A(k,k)=vector(k);
 
-
-                    if(j+(M-2)<N){
-                        A(i+(M-2),j) = r;
-                        A(i,j+(M-2)) = r;
+                    if(k < kmax and i < blocksize){
+                        A(k+1,k) = r;
+                        A(k,k+1) = r; 
                     }
 
-                    if((j+1)%3 == 0 && j!=N){
+
+                    if(k + blocksize <= kmax){
+                        A(k+(M-2),k) = r;
+                        A(k,k+(M-2)) = r;
+                    }
+
+                    //if((j+1)%198 == 0 && j!=N){
+                    /* if((j+1)%(198) == 0 && j!=N){
                         A(i+1,j) = 0;
                         A(i,j+1) = 0;
-                    }
+                    }  */
                 
                 }
         
             }
-        }
+        
 
     return A;
 }
@@ -83,10 +90,10 @@ arma::cx_vec Shrodinger::CalcAB(bool aorb){
     a_k = arma::cx_vec(k_len).fill(0.);
     b_k = arma::cx_vec(k_len).fill(0.);
 
-    for(int i=0; i < M-2; i++){
-            for(int j=0; j < M-2; j++){
+    for(int j=0; j < M-2; j++){
+            for(int i=0; i < M-2; i++){
             double k = getK(i, j, M-2);
-            a_k(k) = arma::cx_double(1.0, 0.0) + arma::cx_double(4.0, 0.0)*r+ ((arma::cx_double(0.0, 1.0)*deltat)/(2.))*V(i,j);
+            a_k(k) = arma::cx_double(1.0, 0.0) + arma::cx_double(4.0, 0.0)*r + ((arma::cx_double(0.0, 1.0)*deltat)/(2.))*V(i,j);
             b_k(k) = arma::cx_double(1.0, 0.0) - arma::cx_double(4.0, 0.0)*r - ((arma::cx_double(0.0, 1.0)*deltat)/(2.))*V(i,j);
             }
         }
@@ -107,8 +114,8 @@ arma::cx_vec Shrodinger::init_u(){
     double k_len = (M-2)*(M-2);
     arma::cx_vec u_0 = arma::cx_vec(k_len).fill(0.);
 
-    for(int i=0; i < M-2; i++){
-            for(int j=0; j < M-2; j++){
+    for(int j=0; j < M-2; j++){
+            for(int i=0; i < M-2; i++){
                 double k = getK(i, j, M-2);
                 double x = i*1/(M-2);
                 double y = j*1/(M-2);
@@ -132,7 +139,7 @@ arma::mat Shrodinger::init_V(){
 
          for(double j = 0; j < M-2; j++){
 
-            if(j<= 75 || (85 < j && j < 95) || (105 < j && j < 115) || j > 125){
+            if(j<= 75 || (85 <= j && j <= 95) || (105 <= j && j <= 115) || j >= 125){
 
                 V(i, j) = v_0;
                 }
@@ -146,7 +153,7 @@ arma::mat Shrodinger::init_V(){
 
          for(double j = 0; j < M-2; j++){
 
-            if(j<= 85 || (95 < j && j < 105) || j > 115){
+            if(j<= 85 || (95 <= j && j <= 105) || j >= 115){
 
                 V(i, j) = v_0;
                 }
@@ -160,7 +167,7 @@ arma::mat Shrodinger::init_V(){
 
          for(double j = 0; j < M-2; j++){
 
-            if( j<= 95 || j > 105){
+            if( j<= 99 || j >= 101){
 
                 V(i, j) = v_0;
                 }

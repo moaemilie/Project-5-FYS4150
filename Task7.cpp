@@ -16,7 +16,7 @@ int main(){
     double y_c_in = 0.5;
     double sig_y_in = 0.20;
     double p_y_in = 0;
-    double v_0_in = 0.;
+    double v_0_in = 1*pow(10,10);
     double slit_width_in = 0.05;
     double part_width_in = 0.05;
     double wall_width_in = 0.02;
@@ -43,7 +43,7 @@ int main(){
 }
     //result.save("Task7_trial1.bin");
 
-    std::string my_output_file_name =  "Task7_without.csv";
+    std::string my_output_file_name =  "Task7.csv";
     result.save(my_output_file_name, arma::csv_ascii);  
 
     return 0;
