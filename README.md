@@ -16,10 +16,13 @@
   To simulate with and without a double-slit barrier by changig the input v_0_in. 
 
   Its compiled by:
+  
   g++ -c Task7.cpp -std=c++11
+  
   g++ Task7.o -o Task7.exe -larmadillo
 
   and run by:
+  
   ./Task7.exe
 
 
