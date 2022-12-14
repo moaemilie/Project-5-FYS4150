@@ -34,27 +34,27 @@ int main(){
  
     // Create a cube that wil hold the results
     arma::cx_cube result = arma::cx_cube((model.M), (model.M), T_in/deltatt_in).fill(arma::cx_double(0.0, 0.0));
-    std::cout<< "Created cube" << std::endl;
+
     // Calculate values for t = 0
     arma::cx_vec p = conj(model.u)%model.u;
     arma::cx_mat matrix_p = arma::cx_mat((model.M-2), (model.M-2));
-    std::cout<< "Created mat and vec" << std::endl;
+
     
     // Make vector to matrix again and add to cube
     for(double coloumn = 0; coloumn < (model.M-2); coloumn++){
-
         for(double i = 0; i < (model.M-2); i++){
-
             matrix_p(i, coloumn) = p((model.M-2)*coloumn + i);   
             } 
         }
-    std::cout<< "Done with for loop" << std::endl;
-    
+
+    // Create padded matrix
     arma::cx_mat padded_matrix_p = arma::cx_mat(model.M, model.M).fill(arma::cx_double(0.0, 0.0));
+    // Insert matrix in padded matrix 
     padded_matrix_p.submat(1 , 1, model.M-2, model.M-2) = matrix_p;
+    // Add matrix to cube
     result.slice(0) = padded_matrix_p;
 
- 
+    // Solve for every timestep
     for(double t = deltatt_in; t <= T_in; t+=deltatt_in){
         model.find_u_next();
 
@@ -64,17 +64,18 @@ int main(){
 
        for(double coloumn = 0; coloumn < (model.M-2); coloumn++){
             for(double i = 0; i < (model.M-2); i++){
-
                 matrix_p(i, coloumn) = p((model.M-2)*coloumn + i);   
                 } 
             }
         
-        // Add matrix to cube
+        // Create padded matrix
         arma::cx_mat padded_matrix_new = arma::cx_mat(model.M, model.M).fill(arma::cx_double(0.0, 0.0));
+        // Insert matrix in padded matrix 
         padded_matrix_new.submat(1 , 1, model.M-2, model.M-2) = matrix_p;
+        // Add matrix to cube
         result.slice(t/deltatt_in) = padded_matrix_new;
     
-
+        // Print status
         std::cout<< "\n\n" ;
         std::cout<< t/deltatt_in;
         std::cout<< " ";

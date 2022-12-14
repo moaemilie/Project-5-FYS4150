@@ -5,18 +5,20 @@
 #include "Shrodinger.cpp"
 #include "Shrodinger.hpp"
 
+// OBS! This file does not work with the new modifications of the Shrodinger class
 
 int main(){
 
-    //arma::cx_double r = arma::cx_double(0.0, 1.0);
-    
-    //std::complex<double>r i(0.0,1.0);
+    // Create test vector and matrix
     arma::cx_vec vector = arma::cx_vec("0.0 1. 2. 3. 4. 5. 6. 7. 8.");
-    //arma::vec vector = arma::vec("0.1 0.2 0.3 0.4 0.8 1. 5.");
     arma::mat V = arma::mat(3, 3).fill(1.);
+    // Create instance of Shrodinger model
     Shrodinger model = Shrodinger(0.2, 0.1, V, 1., 1., 1., 1., 1., 1.);
+
+    // Create A matrix
     arma::cx_mat A = model.tri_matrix(vector, -model.r);
 
+    // Tests
     assert(A(0,0)==arma::cx_double(0.0, 0.0));
     assert(A(1,1)==arma::cx_double(1.0, 0.0));
     assert(A(2,2)==arma::cx_double(2.0, 0.0));
@@ -48,11 +50,7 @@ int main(){
     assert(A(4,0)==arma::cx_double(0.0, 0.0));
     assert(A(0,4)==arma::cx_double(0.0, 0.0));
 
-    //arma::cx_vec a = model.CalcAB(true);
-    //arma::cx_vec b = model.CalcAB(false);
-
-    //model.CalcAB(true);
-    
+    // Print the status
     std::cout<<"\n\n a_k:";
     std::cout<< model.a_k;
     std::cout<<"\n\n b_k:";
