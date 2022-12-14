@@ -32,10 +32,13 @@
   For every timestep the probability is stored in an arma cx matrix which again is stored in a arma cx cube. This is the writen to a .bin file.
 
   Its compiled by:
+  
   g++ -c Task8.cpp -std=c++11
+  
   g++ Task8.o -o Task8.exe -larmadillo
 
   and run by:
+  
   ./Task8.exe
 
 - Task9.cpp
@@ -44,10 +47,13 @@
   For every timestep the probability is stored in an arma cx matrix which again is stored in a arma cx cube. This is the writen to a .bin file.
 
   Its compiled by:
+  
   g++ -c Task9.cpp -std=c++11
+  
   g++ Task9.o -o Task9.exe -larmadillo
 
   and run by:
+  
   ./Task9.exe
 
 
